@@ -8,12 +8,10 @@ import "./App.css";
 import Login from "./components/Login";
 import Report from "./components/Report";
 import LineChart from "./components/LineChart";
-import Navbar from "./components/Navbar";
 
 const App = () => {
   return (
     <>
-      {/* <Navbar /> */}
       <Routes>
         <Route path="/" element={<Login />} exact />
         <Route path="/report" element={<Report />} exact />

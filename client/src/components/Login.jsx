@@ -5,7 +5,8 @@ import {
   Switch,
   Route,
   Link,
-  Redirect,
+  Navigate,
+  useNavigate,
 } from "react-router-dom";
 
 const Login = () => {
@@ -20,25 +21,30 @@ const Login = () => {
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
-
+  const navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await axios.post("http://localhost:5000/login", {
-        username,
-        password,
-      });
-      console.log(response.data);
-
-      setLoggedIn(true);
-    } catch (error) {
-      console.error("Error:", error.response.data.error);
+    if (username === "demo" && password === "demo") {
+      navigate("/report");
+    } else {
+      window.alert("Wrong username or password");
     }
+    // try {
+    //   const response = await axios.post("http://localhost:5000/login", {
+    //     username,
+    //     password,
+    //   });
+    //   console.log(response.data);
+
+    //   setLoggedIn(true);
+    // } catch (error) {
+    //   console.error("Error:", error.response.data.error);
+    // }
   };
 
   return (
-    <div className="page container-fluid pt-3">
+    <div className="page login p-3">
       <img src="/logo.png" alt="logo" width={150} />{" "}
       <img src="/siCalC.png" alt="calc" width={60} />
       <div className="container py-5">

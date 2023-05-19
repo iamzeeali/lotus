@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import {
   Chart,
   CategoryScale,
@@ -22,7 +21,7 @@ Chart.register(
   Legend
 );
 
-const Report = () => {
+const LineChart = () => {
   const [offsetData, setOffsetData] = useState(1);
   const [reportData, setReportData] = useState([]);
 
@@ -50,7 +49,7 @@ const Report = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setOffsetData((prevValue) => prevValue + 1);
-    }, 2000);
+    }, 5000);
 
     return () => {
       clearInterval(timer); // Clear the timer on unmount
@@ -205,4 +204,4 @@ const Report = () => {
   );
 };
 
-export default Report;
+export default LineChart;

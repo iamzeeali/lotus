@@ -1,0 +1,96 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+
+body {
+  color: #fff;
+  font-family: "Montserrat", sans-serif;
+}
+a {
+  color: #f8cbad;
+}
+hr {
+  color: #fff;
+}
+h3 {
+  color: #f78220;
+}
+.page {
+  background-color: #000;
+  height: 120vh;
+}
+
+* {
+  border-radius: 0 !important;
+}
+
+.btn-primary {
+  background-color: #f78220;
+  border: none;
+}
+
+.copyright {
+  position: absolute;
+  bottom: 0px;
+}
+
+.footer {
+  text-align: center;
+  position: relative;
+  left: 100px;
+  width: 100%;
+}
+
+.report {
+}
+.sidebar {
+  width: 220px;
+  background-color: rgba(40, 40, 40, 1);
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+  margin-right: 100px;
+  margin-top: 100px;
+}
+
+.sidebar a {
+  display: block;
+  color: #fff;
+  padding: 16px;
+  text-decoration: none;
+}
+
+.sidebar a.active {
+  background-color: #000;
+  color: white;
+}
+
+.sidebar a:hover:not(.active) {
+  background-color: #555;
+  color: white;
+}
+
+div.content {
+  margin-left: 200px;
+  padding: 1px 16px;
+  height: 1000px;
+}
+
+@media screen and (max-width: 700px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  .sidebar a {
+    float: left;
+  }
+  div.content {
+    margin-left: 0;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .sidebar a {
+    text-align: center;
+    float: none;
+  }
+}
