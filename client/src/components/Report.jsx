@@ -68,8 +68,8 @@ const Report = () => {
         {
           label: "Actual Silicon",
           data: predValue,
-          backgroundColor: "red",
-          borderColor: "red",
+          backgroundColor: "#f78220",
+          borderColor: "#f78220",
           pointHoverRadius: 10,
           borderWidth: 2,
         },
@@ -82,8 +82,8 @@ const Report = () => {
         {
           label: "Predicted Silicon",
           data: pciValue,
-          backgroundColor: "red",
-          borderColor: "red",
+          backgroundColor: "#f78220",
+          borderColor: "#f78220",
           pointHoverRadius: 10,
           borderWidth: 2,
         },
@@ -96,8 +96,8 @@ const Report = () => {
         {
           label: "O2 Enrichment",
           data: o2,
-          backgroundColor: "red",
-          borderColor: "red",
+          backgroundColor: "#f78220",
+          borderColor: "#f78220",
           pointHoverRadius: 10,
           borderWidth: 2,
         },
@@ -110,8 +110,8 @@ const Report = () => {
         {
           label: "Raft",
           data: raft,
-          backgroundColor: "red",
-          borderColor: "red",
+          backgroundColor: "#f78220",
+          borderColor: "#f78220",
           pointHoverRadius: 10,
           borderWidth: 2,
         },
@@ -126,7 +126,7 @@ const Report = () => {
       animation: "linear",
       plugins: {
         legend: {
-          position: "bottom",
+          position: "top",
         },
       },
       interaction: {
@@ -360,44 +360,46 @@ const Report = () => {
         className="px-5"
         style={{ marginLeft: "220px", paddingTop: "130px" }}
       >
+        <h2 className="text-white fw-bold">Hot Metal Silicon</h2>
+        <br />
         <div className="row">
           <div className="col">
-            <div className="p-2">
-              <canvas
-                ref={chartRef1}
-                style={{ backgroundColor: "rgba(40, 40, 40, 0.3)" }}
-                className="p-3"
-              ></canvas>
+            <div
+              className="p-2"
+              style={{ backgroundColor: "rgba(40, 40, 40, 0.3)" }}
+            >
+              <canvas ref={chartRef1}></canvas>
+              <small>Silicon %</small>
             </div>
           </div>
           <div className="col">
-            <div className="p-2">
-              <canvas
-                ref={chartRef2}
-                style={{ backgroundColor: "rgba(40, 40, 40, 0.3)" }}
-                className="p-3"
-              ></canvas>
+            <div
+              className="p-2"
+              style={{ backgroundColor: "rgba(40, 40, 40, 0.3)" }}
+            >
+              <canvas ref={chartRef2}></canvas>
+              <small>Silicon %</small>
             </div>
           </div>
         </div>
         <br />
         <div className="row">
           <div className="col">
-            <div className="p-2">
-              <canvas
-                ref={chartRef3}
-                style={{ backgroundColor: "rgba(40, 40, 40, 0.3)" }}
-                className="p-3"
-              ></canvas>
+            <div
+              className="p-2"
+              style={{ backgroundColor: "rgba(40, 40, 40, 0.3)" }}
+            >
+              <canvas ref={chartRef3}></canvas>
+              <small>Silicon %</small>
             </div>
           </div>
           <div className="col">
-            <div className="p-2">
-              <canvas
-                ref={chartRef4}
-                style={{ backgroundColor: "rgba(40, 40, 40, 0.3)" }}
-                className="p-3"
-              ></canvas>
+            <div
+              className="p-2"
+              style={{ backgroundColor: "rgba(40, 40, 40, 0.3)" }}
+            >
+              <canvas ref={chartRef4}></canvas>
+              <small>Silicon %</small>
             </div>
           </div>
         </div>

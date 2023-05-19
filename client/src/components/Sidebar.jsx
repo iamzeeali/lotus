@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 const Sidebar = () => {
   return (
     <div className="sidebar">
-      <h5 className="text-white p-3 fw-bold text-center"> --Cockpit--</h5>
+      <h5 className="text-white p-3 fw-bold text-center"> Lotus Wireless</h5>
       <a class="" href="#home">
-        <i className="fa fa-tachometer"> </i> Overview
+        <i className="fa fa-tachometer"> </i> Cockpit
       </a>
 
       <a href="#news">

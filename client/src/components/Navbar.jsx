@@ -65,11 +65,9 @@ const Navbar = () => {
                 Search
               </button>
             </form>
-            &nbsp; &nbsp;
-            <Link to="/">
-              {" "}
-              <i className="fa fa-sign-out fa-2x"> </i>
-            </Link>
+            &nbsp; &nbsp; <i className="fa fa-bell fa-2x"> </i>
+            &nbsp; &nbsp; <i className="fa fa-question fa-2x"> </i>
+            &nbsp; &nbsp; <i className="fa fa-user-circle fa-2x"> </i>
           </div>
         </div>
       </nav>

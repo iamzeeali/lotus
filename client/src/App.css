@@ -15,9 +15,11 @@ h3 {
 }
 .page {
   background-color: #000;
-  height: 120vh;
+  height: 150vh;
 }
-
+i {
+  color: #f78220;
+}
 * {
   border-radius: 0 !important;
 }
