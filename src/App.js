@@ -7,6 +7,7 @@ import "./App.css";
 // import POConfirmation from "./components/POConfirmation";
 import Login from "./components/Login";
 import Report from "./components/Report";
+import LineChart from "./components/LineChart";
 import Navbar from "./components/Navbar";
 
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Login />} exact />
         <Route path="/report" element={<Report />} exact />
+        <Route path="/line" element={<LineChart />} exact />
       </Routes>
     </>
   );

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
-  Chart as ChartJS,
+  Chart,
   CategoryScale,
   LinearScale,
   PointElement,
@@ -12,7 +12,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 
-ChartJS.register(
+Chart.register(
   CategoryScale,
   LinearScale,
   PointElement,
@@ -50,7 +50,7 @@ const Report = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setOffsetData((prevValue) => prevValue + 1);
-    }, 2000); // Update every 10 seconds
+    }, 2000);
 
     return () => {
       clearInterval(timer); // Clear the timer on unmount
@@ -60,8 +60,6 @@ const Report = () => {
   const batchTime = reportData.map(
     (item) => item.batch_time && item.batch_time
   );
-
-  // console.log(batchTime);
 
   const labels = [];
   for (var i = 0; i < batchTime.length; i++) {
@@ -88,6 +86,22 @@ const Report = () => {
       intersect: false,
       mode: "index",
     },
+    scales: {
+      x: {
+        grid: {
+          display: true,
+          color: "rgba(40, 40, 40, 0.8)", // Customize the color of x-axis grid lines
+          beginAtZero: true,
+        },
+      },
+      y: {
+        grid: {
+          display: true,
+          color: "rgba(40, 40, 40, 0.8)", // Customize the color of y-axis grid lines
+          beginAtZero: true,
+        },
+      },
+    },
   };
 
   const topLeftData = {
@@ -98,6 +112,8 @@ const Report = () => {
         data: predValue,
         backgroundColor: "red",
         borderColor: "red",
+        pointHoverRadius: 10,
+        borderWidth: 2,
       },
     ],
   };
@@ -110,6 +126,8 @@ const Report = () => {
         data: pciValue,
         backgroundColor: "red",
         borderColor: "red",
+        pointHoverRadius: 10,
+        borderWidth: 2,
       },
     ],
   };
@@ -122,6 +140,8 @@ const Report = () => {
         data: o2,
         backgroundColor: "red",
         borderColor: "red",
+        pointHoverRadius: 10,
+        borderWidth: 2,
       },
     ],
   };
@@ -134,18 +154,15 @@ const Report = () => {
         data: raft,
         backgroundColor: "red",
         borderColor: "red",
+        pointHoverRadius: 10,
+        borderWidth: 2,
       },
     ],
   };
 
-  // useEffect(() => {
-  //   if (reportData.length > 0) {
-  //     const ctx = document.getElementById("myChart").getContext("2d");
-  //   }
-  // }, [reportData]);
-
   return (
     <div className="page">
+      <img src="logo.png" alt="" style={{ width: "200px" }} />
       <div className="container pt-3">
         <i className="fa fa-home fa-2x"> </i> &nbsp;
         <i className="fa fa-search-minus fa-2x"> </i> &nbsp;
@@ -154,27 +171,31 @@ const Report = () => {
         <br />
         <div className="row">
           <div className="col">
-            <div style={{ border: "1px solid gray" }}>
+            <div
+              style={{ border: "1px solid #292828" }}
+              className="p-3"
+              id="#chart1"
+            >
               <Line options={options} data={topLeftData} />
             </div>
           </div>
           {/* <div className="col-sm-2"></div> */}
           <div className="col">
-            <div style={{ border: "1px solid gray" }}>
-              <Line options={options} data={topRightData} />
+            <div style={{ border: "1px solid #292828" }} className="p-3">
+              <Line options={options} data={topRightData} id="myChart" />
             </div>
           </div>
         </div>
         <br />
         <div className="row">
           <div className="col">
-            <div style={{ border: "1px solid gray" }}>
+            <div style={{ border: "1px solid #292828" }} className="p-3">
               <Line options={options} data={bottomLeftData} />
             </div>
           </div>
           {/* <div className="col-sm-2"></div> */}
           <div className="col">
-            <div style={{ border: "1px solid gray" }}>
+            <div style={{ border: "1px solid #292828" }} className="p-3">
               <Line options={options} data={bottomRightData} />
             </div>
           </div>
