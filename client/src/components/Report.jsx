@@ -127,6 +127,11 @@ const Report = () => {
       plugins: {
         legend: {
           position: "top",
+          labels: {
+            font: {
+              size: 17,
+            },
+          },
         },
       },
       interaction: {
