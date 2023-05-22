@@ -4,13 +4,12 @@ const app = express();
 const port = 5000;
 const cors = require("cors");
 
-
 const bcrypt = require("bcrypt");
 // set up middleware
 
 const corsOptions = {
-  origin: "YOUR_FRONTEND_URL", // frontend URI (ReactJS)
-}
+  origin: "https://lotus-wirless.onrender.com/", // frontend URI (ReactJS)
+};
 const bodyParser = require("body-parser");
 app.use(express.json());
 app.use(cors(corsOptions));
