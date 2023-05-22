@@ -3,13 +3,19 @@ const mysql = require("mysql");
 const app = express();
 const port = 5000;
 const cors = require("cors");
-app.use(cors());
+
 
 const bcrypt = require("bcrypt");
-const bodyParser = require("body-parser");
 // set up middleware
-app.use(bodyParser.json());
+
+const corsOptions = {
+  origin: "YOUR_FRONTEND_URL", // frontend URI (ReactJS)
+}
+const bodyParser = require("body-parser");
 app.use(express.json());
+app.use(cors(corsOptions));
+
+app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 
 // create a MySQL connection pool
