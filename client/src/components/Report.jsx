@@ -15,7 +15,7 @@ const Report = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/report/${offsetData}`
+          `https://lotus-xqir.onrender.com:5000/report/${offsetData}`
         );
         const { data } = await response.json();
         setReportData(data);
