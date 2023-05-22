@@ -14,7 +14,7 @@ const Navbar = () => {
               className="mx-5"
             />
             <img
-              src="siCalc.png"
+              src="/siCalc.png"
               alt=""
               style={{ width: "120px" }}
               className="mx-5"

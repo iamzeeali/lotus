@@ -1,6 +1,13 @@
 {
-    "clean_urls": false,
-    "routes": {
-      "/**": "index.html"
-    }
+    "cleanUrls": false,
+    "directoryIndexes": {
+      "directory": "index.html"
+    },
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
   }
+  
