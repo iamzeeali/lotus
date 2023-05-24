@@ -8,7 +8,7 @@ const bcrypt = require("bcrypt");
 // set up middleware
 
 const corsOptions = {
-  origin: "https://lotus-wirless.onrender.com/", // frontend URI (ReactJS)
+  origin: "http://localhost:8080/", // frontend URI (ReactJS)
 };
 const bodyParser = require("body-parser");
 app.use(express.json());
