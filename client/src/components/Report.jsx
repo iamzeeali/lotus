@@ -15,16 +15,17 @@ const Report = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/report/${offsetData}`
+          `http://localhost:5000/report/${offsetData}`
         );
         const { data } = await response.json();
+        console.log(data);
         setReportData(data);
       } catch (error) {
         console.error("Error:", error);
       }
     };
 
-    if (offsetData <= 25) {
+    if (offsetData <= 3) {
       fetchData();
     } else {
       setOffsetData(1);
@@ -35,7 +36,7 @@ const Report = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setOffsetData((prevValue) => prevValue + 1);
-    }, 10000);
+    }, 5000);
 
     return () => {
       clearInterval(timer); // Clear the timer on unmount
@@ -43,9 +44,8 @@ const Report = () => {
   }, []);
 
   useEffect(() => {
-    const batchTime = reportData.map(
-      (item) => item.batch_time && item.batch_time
-    );
+    console.log(reportData);
+    const batchTime = reportData.map((item) => item.TIME_LOG && item.TIME_LOG);
 
     const labels = [];
     for (var i = 0; i < batchTime.length; i++) {
@@ -57,10 +57,10 @@ const Report = () => {
       labels.push(`${hours}:${minutes}`);
     }
 
-    const predValue = reportData.map((item) => item.pred_val);
-    const pciValue = reportData.map((item) => item.pci_kgthm);
-    const o2 = reportData.map((item) => item.o2_enrichment);
-    const raft = reportData.map((item) => item.raft);
+    const predValue = reportData.map((item) => item.PRED_SI_PER);
+    const pciValue = reportData.map((item) => item.PCI);
+    const o2 = reportData.map((item) => item.O2_ENRICHMENT);
+    const raft = reportData.map((item) => item.RAFT);
 
     const topLeftData = {
       labels,
