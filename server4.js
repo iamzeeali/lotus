@@ -1,35 +1,36 @@
-const express = require("express");
-const oracledb = require("oracledb");
+const express = require('express');
+const oracledb = require('oracledb');
 const app = express();
 const port = 5000;
-const cors = require("cors");
-const bodyParser = require("body-parser");
 
 // set up middleware
-app.use(cors());
-app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+let clientOpts = {};
+clientOpts = { libDir: 'C:instantclient_21_10' };
 // create a connection pool
+
+oracledb.initOracleClient(clientOpts);
+
 oracledb
-  .createPool({
-    user: "SYSTEM",
-    password: "gjh649NJnewr92",
-    connectString: "103.235.106.202:1521/XE",
-    poolMin: 2,
-    poolMax: 10,
-    poolIncrement: 0,
+  .getConnection({
+    // user: "SYSTEM",
+    // password: "gjh649NJnewr92",
+    // connectString: "103.235.106.202:1521/XE",
+    user: 'HMI',
+    password: 'hmi',
+    connectString: '10.100.76.101:1521/BFL2',
   })
   .then(() => {
-    console.log("Connected to Oracle database");
+    console.log('Connected to Oracle database');
   })
   .catch((err) => {
-    console.error("Error connecting to Oracle:", err);
+    console.error('Error connecting to Oracle:', err);
   });
 
 // set up a route to fetch data from the Oracle database
-app.get("/report/:chunk", async (req, res) => {
+app.get('/report/:chunk', async (req, res) => {
   const chunk = req.params.chunk;
   const limit = 10;
   const offset = (chunk - 1) * limit;
@@ -52,13 +53,13 @@ app.get("/report/:chunk", async (req, res) => {
     ETACO,
     TO_CHAR(SIMULATE_TIME, 'DD-MM-YYYY HH24:MI:SS') AS SIMULATE_TIME,
     STATUS
-  FROM SYSTEM.T_REALTIME_ANALYSIS
+  FROM T_REALTIME_ANALYSIS
   OFFSET ${offset} ROWS FETCH NEXT ${limit} ROWS ONLY`;
 
   let connection;
 
   try {
-    connection = await oracledb.getConnection();
+    connection = await oracledb.getConnection('default');
     const result = await connection.execute(sql);
     const columns = result.metaData.map((column) => column.name);
     const rows = result.rows.map((row) => {
@@ -71,14 +72,14 @@ app.get("/report/:chunk", async (req, res) => {
 
     res.json({ data: rows });
   } catch (err) {
-    console.error("Error executing Oracle query:", err);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error('Error executing Oracle query:', err.message);
+    res.status(500).json({ error: 'Internal Server Error' });
   } finally {
     if (connection) {
       try {
         await connection.close();
       } catch (err) {
-        console.error("Error closing Oracle connection:", err);
+        console.error('Error closing Oracle connection:', err);
       }
     }
   }

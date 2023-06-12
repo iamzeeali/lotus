@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Chart } from "chart.js";
-import Navbar from "./Navbar";
-import Sidebar from "./Sidebar";
+import React, { useEffect, useRef, useState } from 'react';
+import { Chart } from 'chart.js';
+import Navbar from './Navbar';
+import Sidebar from './Sidebar';
 
 const Report = () => {
   const chartRef1 = useRef(null);
@@ -21,11 +21,11 @@ const Report = () => {
         console.log(data);
         setReportData(data);
       } catch (error) {
-        console.error("Error:", error);
+        console.error('Error:', error);
       }
     };
 
-    if (offsetData <= 3) {
+    if (offsetData <= 1) {
       fetchData();
     } else {
       setOffsetData(1);
@@ -66,10 +66,10 @@ const Report = () => {
       labels,
       datasets: [
         {
-          label: "Actual Silicon",
+          label: 'PREDICTED SILICON',
           data: predValue,
-          backgroundColor: "#f78220",
-          borderColor: "#f78220",
+          backgroundColor: '#f78220',
+          borderColor: '#f78220',
           pointHoverRadius: 10,
           borderWidth: 2,
         },
@@ -80,10 +80,10 @@ const Report = () => {
       labels,
       datasets: [
         {
-          label: "Predicted Silicon",
+          label: 'PCI',
           data: pciValue,
-          backgroundColor: "#f78220",
-          borderColor: "#f78220",
+          backgroundColor: '#f78220',
+          borderColor: '#f78220',
           pointHoverRadius: 10,
           borderWidth: 2,
         },
@@ -94,10 +94,10 @@ const Report = () => {
       labels,
       datasets: [
         {
-          label: "O2 Enrichment",
+          label: 'O2 ENRICHMENT',
           data: o2,
-          backgroundColor: "#f78220",
-          borderColor: "#f78220",
+          backgroundColor: '#f78220',
+          borderColor: '#f78220',
           pointHoverRadius: 10,
           borderWidth: 2,
         },
@@ -108,10 +108,10 @@ const Report = () => {
       labels,
       datasets: [
         {
-          label: "Raft",
+          label: 'RAFT',
           data: raft,
-          backgroundColor: "#f78220",
-          borderColor: "#f78220",
+          backgroundColor: '#f78220',
+          borderColor: '#f78220',
           pointHoverRadius: 10,
           borderWidth: 2,
         },
@@ -121,12 +121,12 @@ const Report = () => {
     var options = {
       responsive: true,
       maintainAspectRatio: true,
-      backgroundColor: "rgba(40, 40, 40, 1)",
+      backgroundColor: 'rgba(40, 40, 40, 1)',
 
-      animation: "linear",
+      animation: 'linear',
       plugins: {
         legend: {
-          position: "top",
+          position: 'top',
           labels: {
             font: {
               size: 17,
@@ -136,20 +136,20 @@ const Report = () => {
       },
       interaction: {
         intersect: false,
-        mode: "index",
+        mode: 'index',
       },
       scales: {
         x: {
           grid: {
             display: true,
-            color: "rgba(40, 40, 40, 1)", // Customize the color of x-axis grid lines
+            color: 'rgba(40, 40, 40, 1)', // Customize the color of x-axis grid lines
             beginAtZero: true,
           },
         },
         y: {
           grid: {
             display: true,
-            color: "rgba(40, 40, 40, 1)", // Customize the color of y-axis grid lines
+            color: 'rgba(40, 40, 40, 1)', // Customize the color of y-axis grid lines
             beginAtZero: true,
           },
         },
@@ -157,7 +157,7 @@ const Report = () => {
     };
 
     const config1 = {
-      type: "line",
+      type: 'line',
       data: topLeftData,
       options: options,
     };
@@ -165,7 +165,7 @@ const Report = () => {
     const myChart = new Chart(chartRef1.current, config1);
 
     const config2 = {
-      type: "line",
+      type: 'line',
       data: topRightData,
       options: options,
     };
@@ -173,7 +173,7 @@ const Report = () => {
     const myChart2 = new Chart(chartRef2.current, config2);
 
     const config3 = {
-      type: "line",
+      type: 'line',
       data: bottomLeftData,
       options: options,
     };
@@ -181,7 +181,7 @@ const Report = () => {
     const myChart3 = new Chart(chartRef3.current, config3);
 
     const config4 = {
-      type: "line",
+      type: 'line',
       data: bottomRightData,
       options: options,
     };
@@ -191,7 +191,7 @@ const Report = () => {
     const hover1 = (move) => {
       const points = myChart.getElementsAtEventForMode(
         move,
-        "nearest",
+        'nearest',
         {
           intersect: false,
         },
@@ -230,7 +230,7 @@ const Report = () => {
     const hover2 = (move) => {
       const points = myChart2.getElementsAtEventForMode(
         move,
-        "nearest",
+        'nearest',
         {
           intersect: false,
         },
@@ -270,7 +270,7 @@ const Report = () => {
     const hover3 = (move) => {
       const points = myChart2.getElementsAtEventForMode(
         move,
-        "nearest",
+        'nearest',
         {
           intersect: false,
         },
@@ -310,7 +310,7 @@ const Report = () => {
     const hover4 = (move) => {
       const points = myChart2.getElementsAtEventForMode(
         move,
-        "nearest",
+        'nearest',
         {
           intersect: false,
         },
@@ -363,7 +363,7 @@ const Report = () => {
       <Sidebar />
       <div
         className="px-5"
-        style={{ marginLeft: "220px", paddingTop: "130px" }}
+        style={{ marginLeft: '220px', paddingTop: '130px' }}
       >
         <h2 className="text-white fw-bold">Hot Metal Silicon</h2>
         <br />
@@ -371,7 +371,7 @@ const Report = () => {
           <div className="col">
             <div
               className="p-2"
-              style={{ backgroundColor: "rgba(40, 40, 40, 0.3)" }}
+              style={{ backgroundColor: 'rgba(40, 40, 40, 0.3)' }}
             >
               <canvas ref={chartRef1}></canvas>
               <small>Silicon %</small>
@@ -380,7 +380,7 @@ const Report = () => {
           <div className="col">
             <div
               className="p-2"
-              style={{ backgroundColor: "rgba(40, 40, 40, 0.3)" }}
+              style={{ backgroundColor: 'rgba(40, 40, 40, 0.3)' }}
             >
               <canvas ref={chartRef2}></canvas>
               <small>Silicon %</small>
@@ -392,7 +392,7 @@ const Report = () => {
           <div className="col">
             <div
               className="p-2"
-              style={{ backgroundColor: "rgba(40, 40, 40, 0.3)" }}
+              style={{ backgroundColor: 'rgba(40, 40, 40, 0.3)' }}
             >
               <canvas ref={chartRef3}></canvas>
               <small>Silicon %</small>
@@ -401,7 +401,7 @@ const Report = () => {
           <div className="col">
             <div
               className="p-2"
-              style={{ backgroundColor: "rgba(40, 40, 40, 0.3)" }}
+              style={{ backgroundColor: 'rgba(40, 40, 40, 0.3)' }}
             >
               <canvas ref={chartRef4}></canvas>
               <small>Silicon %</small>
