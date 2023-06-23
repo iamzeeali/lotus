@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   return (
@@ -10,13 +10,13 @@ const Navbar = () => {
             <img
               src="lotus.png"
               alt=""
-              style={{ width: "60px" }}
+              style={{ width: '60px' }}
               className="mx-5"
             />
             <img
               src="/siCalc.png"
               alt=""
-              style={{ width: "120px" }}
+              style={{ width: '120px' }}
               className="mx-5"
             />
           </Link>
@@ -67,7 +67,18 @@ const Navbar = () => {
             </form>
             &nbsp; &nbsp; <i className="fa fa-bell fa-2x"> </i>
             &nbsp; &nbsp; <i className="fa fa-question fa-2x"> </i>
-            &nbsp; &nbsp; <i className="fa fa-user-circle fa-2x"> </i>
+            &nbsp; &nbsp;{' '}
+            <Link to="/">
+              {' '}
+              <i className="fa fa-sign-out fa-2x"> </i>
+            </Link>
+            &nbsp; &nbsp;{' '}
+            <img
+              src="sail.png"
+              alt=""
+              width={30}
+              style={{ backgroundColor: '#fff' }}
+            />
           </div>
         </div>
       </nav>

@@ -10,6 +10,11 @@ const Report = () => {
   const chartRef4 = useRef(null);
   const [offsetData, setOffsetData] = useState(1);
   const [reportData, setReportData] = useState([]);
+  const [topLeftGraphType, setTopLeftGraphType] = useState('PREDICTED SILICON');
+  const [topRightGraphType, setTopRightGraphType] = useState('PCI');
+  const [bottomLeftGraphType, setBottomLeftGraphType] =
+    useState('O2 ENRICHMENT');
+  const [bottomRightGraphType, setBottomRightGraphType] = useState('RAFT');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,14 +23,13 @@ const Report = () => {
           `http://localhost:5000/report/${offsetData}`
         );
         const { data } = await response.json();
-        console.log(data);
         setReportData(data);
       } catch (error) {
         console.error('Error:', error);
       }
     };
 
-    if (offsetData <= 1) {
+    if (offsetData < 30) {
       fetchData();
     } else {
       setOffsetData(1);
@@ -44,7 +48,6 @@ const Report = () => {
   }, []);
 
   useEffect(() => {
-    console.log(reportData);
     const batchTime = reportData.map((item) => item.TIME_LOG && item.TIME_LOG);
 
     const labels = [];
@@ -62,12 +65,18 @@ const Report = () => {
     const o2 = reportData.map((item) => item.O2_ENRICHMENT);
     const raft = reportData.map((item) => item.RAFT);
 
+    const compareTime = (datetime1, datetime2) => {
+      const time1 = new Date(datetime1).getTime();
+      const time2 = new Date(datetime2).getTime();
+      return time1 - time2;
+    };
+
     const topLeftData = {
       labels,
       datasets: [
         {
           label: 'PREDICTED SILICON',
-          data: predValue,
+          data: predValue.sort(compareTime),
           backgroundColor: '#f78220',
           borderColor: '#f78220',
           pointHoverRadius: 10,
@@ -80,8 +89,15 @@ const Report = () => {
       labels,
       datasets: [
         {
-          label: 'PCI',
-          data: pciValue,
+          label: topRightGraphType,
+          data:
+            topRightGraphType === 'PCI'
+              ? pciValue
+              : topRightGraphType === 'O2 ENRICHMENT'
+              ? o2
+              : topRightGraphType === 'RAFT'
+              ? raft
+              : pciValue,
           backgroundColor: '#f78220',
           borderColor: '#f78220',
           pointHoverRadius: 10,
@@ -94,8 +110,15 @@ const Report = () => {
       labels,
       datasets: [
         {
-          label: 'O2 ENRICHMENT',
-          data: o2,
+          label: bottomLeftGraphType,
+          data:
+            bottomLeftGraphType === 'PCI'
+              ? pciValue
+              : bottomLeftGraphType === 'O2 ENRICHMENT'
+              ? o2
+              : bottomLeftGraphType === 'RAFT'
+              ? raft
+              : pciValue,
           backgroundColor: '#f78220',
           borderColor: '#f78220',
           pointHoverRadius: 10,
@@ -108,8 +131,15 @@ const Report = () => {
       labels,
       datasets: [
         {
-          label: 'RAFT',
-          data: raft,
+          label: bottomRightGraphType,
+          data:
+            bottomRightGraphType === 'PCI'
+              ? pciValue
+              : bottomRightGraphType === 'O2 ENRICHMENT'
+              ? o2
+              : bottomRightGraphType === 'RAFT'
+              ? raft
+              : pciValue,
           backgroundColor: '#f78220',
           borderColor: '#f78220',
           pointHoverRadius: 10,
@@ -129,8 +159,10 @@ const Report = () => {
           position: 'top',
           labels: {
             font: {
-              size: 17,
+              size: 14,
             },
+            boxWidth: 0,
+            color: '#ffffff',
           },
         },
       },
@@ -140,6 +172,14 @@ const Report = () => {
       },
       scales: {
         x: {
+          title: {
+            display: true,
+            text: 'Time (hh:mm)',
+            font: {
+              size: 14,
+            },
+            color: '#fff',
+          },
           grid: {
             display: true,
             color: 'rgba(40, 40, 40, 1)', // Customize the color of x-axis grid lines
@@ -147,6 +187,16 @@ const Report = () => {
           },
         },
         y: {
+          suggestedMin: topLeftGraphType === 'PREDICTED SILICON' && 0, // Set the minimum value for the Y-axis
+          suggestedMax: topLeftGraphType === 'PREDICTED SILICON' && 2, // Set the maximum value for the Y-axis
+          title: {
+            display: true,
+            text: 'SILICON %',
+            font: {
+              size: 14,
+            },
+            color: '#fff',
+          },
           grid: {
             display: true,
             color: 'rgba(40, 40, 40, 1)', // Customize the color of y-axis grid lines
@@ -355,7 +405,25 @@ const Report = () => {
       myChart3.destroy();
       myChart4.destroy();
     };
-  }, [reportData]);
+  }, [
+    reportData,
+    topRightGraphType,
+    bottomLeftGraphType,
+    bottomRightGraphType,
+  ]);
+
+  const handleTopRightGraphType = (event) => {
+    const selectedValue = event.target.value;
+    setTopRightGraphType(selectedValue);
+  };
+  const handleBottomLeftGraphType = (event) => {
+    const selectedValue = event.target.value;
+    setBottomLeftGraphType(selectedValue);
+  };
+  const handleBottomRightGraphType = (event) => {
+    const selectedValue = event.target.value;
+    setBottomRightGraphType(selectedValue);
+  };
 
   return (
     <div className="page report">
@@ -365,46 +433,80 @@ const Report = () => {
         className="px-5"
         style={{ marginLeft: '220px', paddingTop: '130px' }}
       >
-        <h2 className="text-white fw-bold">Hot Metal Silicon</h2>
+        <h5 className="text-white fw-bold">
+          Comparative Time Series Data Trending
+        </h5>
         <br />
         <div className="row">
-          <div className="col">
+          <div className="col mt-4">
             <div
               className="p-2"
-              style={{ backgroundColor: 'rgba(40, 40, 40, 0.3)' }}
+              style={{
+                backgroundColor: 'rgba(40, 40, 40, 0.4)',
+                borderRadius: '',
+              }}
             >
               <canvas ref={chartRef1}></canvas>
-              <small>Silicon %</small>
             </div>
           </div>
           <div className="col">
+            <div class="form-group">
+              <select
+                value={topRightGraphType}
+                onChange={handleTopRightGraphType}
+                className="text-right"
+              >
+                <option value="PCI">PCI</option>
+                <option value="O2 ENRICHMENT">O2 ENRICHMENT</option>
+                <option value="RAFT">RAFT</option>
+              </select>
+            </div>
             <div
               className="p-2"
-              style={{ backgroundColor: 'rgba(40, 40, 40, 0.3)' }}
+              style={{ backgroundColor: 'rgba(40, 40, 40, 0.4)' }}
             >
               <canvas ref={chartRef2}></canvas>
-              <small>Silicon %</small>
             </div>
           </div>
         </div>
         <br />
         <div className="row">
           <div className="col">
+            <div class="form-group">
+              <select
+                value={bottomLeftGraphType}
+                onChange={handleBottomLeftGraphType}
+                className="text-right"
+              >
+                <option value="PCI">PCI</option>
+                <option value="O2 ENRICHMENT">O2 ENRICHMENT</option>
+                <option value="RAFT">RAFT</option>
+              </select>
+            </div>
             <div
               className="p-2"
-              style={{ backgroundColor: 'rgba(40, 40, 40, 0.3)' }}
+              style={{ backgroundColor: 'rgba(40, 40, 40, 0.4)' }}
             >
               <canvas ref={chartRef3}></canvas>
-              <small>Silicon %</small>
             </div>
           </div>
           <div className="col">
+            <div class="form-group">
+              <select
+                value={bottomRightGraphType}
+                onChange={handleBottomRightGraphType}
+                className="text-right"
+              >
+                <option value="PCI">PCI</option>
+                <option value="O2 ENRICHMENT">O2 ENRICHMENT</option>
+                <option value="RAFT">RAFT</option>
+              </select>
+            </div>
             <div
               className="p-2"
-              style={{ backgroundColor: 'rgba(40, 40, 40, 0.3)' }}
+              style={{ backgroundColor: 'rgba(40, 40, 40, 0.4)' }}
             >
               <canvas ref={chartRef4}></canvas>
-              <small>Silicon %</small>
             </div>
           </div>
         </div>

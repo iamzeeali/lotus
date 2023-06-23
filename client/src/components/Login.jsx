@@ -1,18 +1,9 @@
-import React, { useState } from "react";
-import axios from "axios";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Navigate,
-  useNavigate,
-} from "react-router-dom";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleUsername = (e) => {
     setUsername(e.target.value);
@@ -25,10 +16,10 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (username === "demo" && password === "demo") {
-      navigate("/report");
+    if (username === 'demo' && password === 'demo') {
+      navigate('/report');
     } else {
-      window.alert("Wrong username or password");
+      window.alert('Wrong username or password');
     }
     // try {
     //   const response = await axios.post("http://localhost:5000/login", {
@@ -45,22 +36,21 @@ const Login = () => {
 
   return (
     <div className="page login p-3">
-      <img src="/logo.png" alt="logo" width={150} />{" "}
+      <img src="/logo.png" alt="logo" width={150} />{' '}
       <img src="/siCalC.png" alt="calc" width={60} />
       <div className="container py-5">
         <div className="row py-4">
-          <div className="col-sm-6" style={{ textAlign: "center" }}>
-            <img src="/lotus.png" alt="logo" style={{ width: "50%" }} />
-            <br />
-            <small>Developed by Lotus Wireless Technologies</small>
+          <div className="col-sm-6" style={{ textAlign: 'center' }}>
+            <img src="/lotus.png" alt="logo" style={{ width: '50%' }} />
             <br />
             <br />
-            <img src="/logo.png" alt="logo" width={300} />{" "}
+            <img src="/logo.png" alt="logo" width={300} /> <br />
+            <small>SilCal Developed by Lotus Wireless Technologies</small>
           </div>
           <div className="col-sm-6 px-5">
             <form className="px-5 py-5" onSubmit={handleLogin}>
               <h3>
-                {" "}
+                {' '}
                 <i className="fa fa-user-o"></i> Login
               </h3>
               <hr />
@@ -91,7 +81,7 @@ const Login = () => {
                     required
                   />
                   <a href="">
-                    {" "}
+                    {' '}
                     <small>Forgot password?</small>
                   </a>
                 </div>
@@ -101,11 +91,11 @@ const Login = () => {
                     className="btn btn-primary mt-4"
                     type="submit"
                   >
-                    Login{" "}
+                    Login{' '}
                   </button>
                 </div>
                 <a href="">
-                  {" "}
+                  {' '}
                   <small>Create Account?</small>
                 </a>
               </fieldset>
