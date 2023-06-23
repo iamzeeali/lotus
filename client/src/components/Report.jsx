@@ -187,8 +187,6 @@ const Report = () => {
           },
         },
         y: {
-          suggestedMin: topLeftGraphType === 'PREDICTED SILICON' && 0, // Set the minimum value for the Y-axis
-          suggestedMax: topLeftGraphType === 'PREDICTED SILICON' && 2, // Set the maximum value for the Y-axis
           title: {
             display: true,
             text: 'SILICON %',

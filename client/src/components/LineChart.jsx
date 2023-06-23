@@ -2,7 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Chart } from 'chart.js';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
-
+import {
+  topRightGraphTypeFn,
+  bottomLeftGraphTypeFn,
+  bottomRightGraphTypeFn,
+} from '../utils/paramterSelector';
 const LineChart = () => {
   const chartRef1 = useRef(null);
   const chartRef2 = useRef(null);
@@ -88,42 +92,26 @@ const LineChart = () => {
       ],
     };
 
-    function topRightGraphTypeFn() {
-      if (topRightGraphType === 'HOT BLAST FLOW') {
-        return hotBlastFlow;
-      } else if (topRightGraphType === 'HOT BLAST TEMP') {
-        return hotBlastTemp;
-      } else if (topRightGraphType === 'HOT BLAST TEMP') {
-        return hotBlastTemp;
-      } else if (topRightGraphType === 'STEAM TPH') {
-        return hotBlastTemp;
-      } else if (topRightGraphType === 'CO') {
-        return co;
-      } else if (topRightGraphType === 'CO2') {
-        return co2;
-      } else if (topRightGraphType === 'H2') {
-        return h2;
-      } else if (topRightGraphType === 'TOP GAS PR') {
-        return topGasPR;
-      } else if (topRightGraphType === 'HOT BLAST PRE') {
-        return hotBlastTemp;
-      } else if (topRightGraphType === 'ETACO') {
-        return eTaco;
-      } else if (topRightGraphType === 'PCI') {
-        return pciValue;
-      } else if (topRightGraphType === 'O2 ENRICHMENT') {
-        return o2;
-      } else if (topRightGraphType === 'RAFT') {
-        return raft;
-      }
-    }
-
     const topRightData = {
       labels,
       datasets: [
         {
           label: topRightGraphType,
-          data: topRightGraphTypeFn(),
+          data: topRightGraphTypeFn(
+            topRightGraphType,
+            hotBlastFlow,
+            hotBlastTemp,
+            hotBlastPre,
+            steamTph,
+            co,
+            co2,
+            h2,
+            topGasPR,
+            eTaco,
+            pciValue,
+            raft,
+            o2
+          ),
           backgroundColor: '#f78220',
           borderColor: '#f78220',
           pointHoverRadius: 10,
@@ -137,14 +125,21 @@ const LineChart = () => {
       datasets: [
         {
           label: bottomLeftGraphType,
-          data:
-            bottomLeftGraphType === 'PCI'
-              ? pciValue
-              : bottomLeftGraphType === 'O2 ENRICHMENT'
-              ? o2
-              : bottomLeftGraphType === 'RAFT'
-              ? raft
-              : pciValue,
+          data: bottomLeftGraphTypeFn(
+            bottomLeftGraphType,
+            hotBlastFlow,
+            hotBlastTemp,
+            hotBlastPre,
+            steamTph,
+            co,
+            co2,
+            h2,
+            topGasPR,
+            eTaco,
+            pciValue,
+            raft,
+            o2
+          ),
           backgroundColor: '#f78220',
           borderColor: '#f78220',
           pointHoverRadius: 10,
@@ -158,14 +153,21 @@ const LineChart = () => {
       datasets: [
         {
           label: bottomRightGraphType,
-          data:
-            bottomRightGraphType === 'PCI'
-              ? pciValue
-              : bottomRightGraphType === 'O2 ENRICHMENT'
-              ? o2
-              : bottomRightGraphType === 'RAFT'
-              ? raft
-              : pciValue,
+          data: bottomRightGraphTypeFn(
+            bottomRightGraphType,
+            hotBlastFlow,
+            hotBlastTemp,
+            hotBlastPre,
+            steamTph,
+            co,
+            co2,
+            h2,
+            topGasPR,
+            eTaco,
+            pciValue,
+            raft,
+            o2
+          ),
           backgroundColor: '#f78220',
           borderColor: '#f78220',
           pointHoverRadius: 10,
@@ -454,6 +456,7 @@ const LineChart = () => {
   const allGraphs = [
     'HOT BLAST FLOW',
     'HOT BLAST TEMP',
+    'HOT BLAST PRE',
     'STEAM TPH',
     'PCI',
     'O2 ENRICHMENT',
@@ -462,7 +465,6 @@ const LineChart = () => {
     'CO2',
     'H2',
     'TOP GAS PR',
-    'HOT BLAST PRE',
     'ETACO',
     'TOTAL DIFF PR',
   ];
