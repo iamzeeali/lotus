@@ -16,8 +16,8 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (username === 'demo' && password === 'demo') {
-      navigate('/report');
+    if (username === 'dsp' && password === 'dsp') {
+      navigate('/line');
     } else {
       window.alert('Wrong username or password');
     }
@@ -36,8 +36,14 @@ const Login = () => {
 
   return (
     <div className="page login p-3">
-      <img src="/logo.png" alt="logo" width={150} />{' '}
-      <img src="/siCalC.png" alt="calc" width={60} />
+      <img
+        src="/logo.png"
+        alt="logo"
+        width={150}
+        className="float-start mx-2"
+      />{' '}
+      {/* <img src="/siCalC.png" alt="calc" width={60} /> */}
+      <h3 className="fw-bold">SilCal</h3>
       <div className="container py-5">
         <div className="row py-4">
           <div className="col-sm-6" style={{ textAlign: 'center' }}>

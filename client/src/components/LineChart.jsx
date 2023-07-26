@@ -7,62 +7,77 @@ import {
   bottomLeftGraphTypeFn,
   bottomRightGraphTypeFn,
 } from '../utils/paramterSelector';
+import { allGraphs } from '../utils/graphTypes';
+import {
+  topRightGraphUnit,
+  bottomLeftGraphUnit,
+  bottomRightGraphUnit,
+} from '../utils/graphUnits';
+import moment from 'moment';
+
 const LineChart = () => {
   const chartRef1 = useRef(null);
   const chartRef2 = useRef(null);
   const chartRef3 = useRef(null);
   const chartRef4 = useRef(null);
-  const [offsetData, setOffsetData] = useState(1);
   const [reportData, setReportData] = useState([]);
-  const [topLeftGraphType, setTopLeftGraphType] = useState('PREDICTED SILICON');
   const [topRightGraphType, setTopRightGraphType] = useState('PCI');
   const [bottomLeftGraphType, setBottomLeftGraphType] =
     useState('O2 ENRICHMENT');
   const [bottomRightGraphType, setBottomRightGraphType] = useState('RAFT');
+  const [latestDate, setLatestDate] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:5000/report/${offsetData}`
-        );
+        const response = await fetch(`http://localhost:5000/report`);
         const { data } = await response.json();
         setReportData(data);
+        const date = moment(data[0].TIME_LOG);
+        const formattedDate = date.format('DD/MM/YYYY');
+        setLatestDate(formattedDate);
       } catch (error) {
         console.error('Error:', error);
       }
     };
 
-    if (offsetData < 30) {
-      fetchData();
-    } else {
-      setOffsetData(1);
-      fetchData();
-    }
-  }, [offsetData]);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setOffsetData((prevValue) => prevValue + 1);
-    }, 5000);
-
-    return () => {
-      clearInterval(timer); // Clear the timer on unmount
-    };
+    fetchData();
   }, []);
 
   useEffect(() => {
-    const batchTime = reportData.map((item) => item.TIME_LOG && item.TIME_LOG);
+    const fetchDataSecond = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/reportSecond`);
+        const { data } = await response.json();
+        console.log(reportData[reportData.length - 1].TIME_LOG);
 
-    const labels = [];
-    for (var i = 0; i < batchTime.length; i++) {
-      const dateTimeString = batchTime[i];
-      const dateTime = new Date(dateTimeString);
+        if (data[0].TIME_LOG === reportData[reportData.length - 1].TIME_LOG) {
+          console.log('No New Data');
+        } else {
+          setReportData((prevData) => {
+            const newArray = [...prevData];
+            newArray.shift();
+            newArray.push(data[0]);
+            console.log('New Data Came in!!');
+            return newArray;
+          });
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
 
-      const hours = dateTime.getHours();
-      const minutes = dateTime.getMinutes();
-      labels.push(`${hours}:${minutes}`);
-    }
+    const interval = setInterval(fetchDataSecond, 3000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [reportData]);
+
+  useEffect(() => {
+    const labelsArray = reportData.map(
+      (item) => item.FORMATTED_TIME_LOG && item.FORMATTED_TIME_LOG
+    );
+    const labels = labelsArray;
 
     const predValue = reportData.map((item) => item.PRED_SI_PER);
     const pciValue = reportData.map((item) => item.PCI);
@@ -181,7 +196,6 @@ const LineChart = () => {
       maintainAspectRatio: true,
       backgroundColor: 'rgba(40, 40, 40, 1)',
 
-      animation: 'linear',
       plugins: {
         legend: {
           position: 'top',
@@ -198,46 +212,58 @@ const LineChart = () => {
         intersect: false,
         mode: 'index',
       },
-      scales: {
-        x: {
-          title: {
-            display: true,
-            text: 'Time (hh:mm)',
-            font: {
-              size: 14,
-            },
-            color: '#fff',
-          },
-          grid: {
-            display: true,
-            color: 'rgba(40, 40, 40, 1)', // Customize the color of x-axis grid lines
-            beginAtZero: true,
-          },
-        },
-        y: {
-          // suggestedMin: topLeftGraphType === 'PREDICTED SILICON' && 0, // Set the minimum value for the Y-axis
-          // suggestedMax: topLeftGraphType === 'PREDICTED SILICON' && 2, // Set the maximum value for the Y-axis
-          title: {
-            display: true,
-            text: 'SILICON %',
-            font: {
-              size: 14,
-            },
-            color: '#fff',
-          },
-          grid: {
-            display: true,
-            color: 'rgba(40, 40, 40, 1)', // Customize the color of y-axis grid lines
-            beginAtZero: true,
-          },
-        },
+
+      animation: {
+        duration: 0,
       },
     };
 
     const config1 = {
       type: 'line',
       data: topLeftData,
-      options: options,
+      options: {
+        ...options,
+        scales: {
+          x: {
+            ticks: {
+              color: 'white', // Set the label color here
+            },
+            title: {
+              display: true,
+              text: 'Time (hh:mm)',
+              font: {
+                size: 14,
+              },
+              color: '#fff',
+            },
+            grid: {
+              display: true,
+              color: 'rgba(40, 40, 40, 1)', // Customize the color of x-axis grid lines
+              beginAtZero: true,
+            },
+          },
+          y: {
+            suggestedMin: 0, // Set the minimum value for the Y-axis
+            suggestedMax: 2,
+            ticks: {
+              color: 'white', // Set the label color here
+            },
+            title: {
+              display: true,
+              text: 'PERCENTAGE %',
+              font: {
+                size: 14,
+              },
+              color: '#fff',
+            },
+            grid: {
+              display: true,
+              color: 'rgba(40, 40, 40, 1)', // Customize the color of y-axis grid lines
+              beginAtZero: true,
+            },
+          },
+        },
+      },
     };
 
     const myChart = new Chart(chartRef1.current, config1);
@@ -245,7 +271,47 @@ const LineChart = () => {
     const config2 = {
       type: 'line',
       data: topRightData,
-      options: options,
+      options: {
+        ...options,
+        scales: {
+          x: {
+            ticks: {
+              color: 'white', // Set the label color here
+            },
+            title: {
+              display: true,
+              text: 'Time (hh:mm)',
+              font: {
+                size: 14,
+              },
+              color: '#fff',
+            },
+            grid: {
+              display: true,
+              color: 'rgba(40, 40, 40, 1)', // Customize the color of x-axis grid lines
+              beginAtZero: true,
+            },
+          },
+          y: {
+            ticks: {
+              color: 'white', // Set the label color here
+            },
+            title: {
+              display: true,
+              text: topRightGraphUnit(topRightGraphType),
+              font: {
+                size: 14,
+              },
+              color: '#fff',
+            },
+            grid: {
+              display: true,
+              color: 'rgba(40, 40, 40, 1)', // Customize the color of y-axis grid lines
+              beginAtZero: true,
+            },
+          },
+        },
+      },
     };
 
     const myChart2 = new Chart(chartRef2.current, config2);
@@ -253,7 +319,47 @@ const LineChart = () => {
     const config3 = {
       type: 'line',
       data: bottomLeftData,
-      options: options,
+      options: {
+        ...options,
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Time (hh:mm)',
+              font: {
+                size: 14,
+              },
+              color: '#fff',
+            },
+            ticks: {
+              color: 'white', // Set the label color here
+            },
+            grid: {
+              display: true,
+              color: 'rgba(40, 40, 40, 1)', // Customize the color of x-axis grid lines
+              beginAtZero: true,
+            },
+          },
+          y: {
+            ticks: {
+              color: 'white', // Set the label color here
+            },
+            title: {
+              display: true,
+              text: bottomLeftGraphUnit(bottomLeftGraphType),
+              font: {
+                size: 14,
+              },
+              color: '#fff',
+            },
+            grid: {
+              display: true,
+              color: 'rgba(40, 40, 40, 1)', // Customize the color of y-axis grid lines
+              beginAtZero: true,
+            },
+          },
+        },
+      },
     };
 
     const myChart3 = new Chart(chartRef3.current, config3);
@@ -261,7 +367,47 @@ const LineChart = () => {
     const config4 = {
       type: 'line',
       data: bottomRightData,
-      options: options,
+      options: {
+        ...options,
+        scales: {
+          x: {
+            ticks: {
+              color: 'white', // Set the label color here
+            },
+            title: {
+              display: true,
+              text: 'Time (hh:mm)',
+              font: {
+                size: 14,
+              },
+              color: '#fff',
+            },
+            grid: {
+              display: true,
+              color: 'rgba(40, 40, 40, 1)', // Customize the color of x-axis grid lines
+              beginAtZero: true,
+            },
+          },
+          y: {
+            ticks: {
+              color: 'white', // Set the label color here
+            },
+            title: {
+              display: true,
+              text: bottomRightGraphUnit(bottomRightGraphType),
+              font: {
+                size: 14,
+              },
+              color: '#fff',
+            },
+            grid: {
+              display: true,
+              color: 'rgba(40, 40, 40, 1)', // Customize the color of y-axis grid lines
+              beginAtZero: true,
+            },
+          },
+        },
+      },
     };
 
     const myChart4 = new Chart(chartRef4.current, config4);
@@ -453,22 +599,6 @@ const LineChart = () => {
     setBottomRightGraphType(selectedValue);
   };
 
-  const allGraphs = [
-    'HOT BLAST FLOW',
-    'HOT BLAST TEMP',
-    'HOT BLAST PRE',
-    'STEAM TPH',
-    'PCI',
-    'O2 ENRICHMENT',
-    'RAFT',
-    'CO',
-    'CO2',
-    'H2',
-    'TOP GAS PR',
-    'ETACO',
-    'TOTAL DIFF PR',
-  ];
-
   const topRightOptions = allGraphs.filter(
     (allGraph) =>
       allGraph !== topRightGraphType &&
@@ -476,110 +606,114 @@ const LineChart = () => {
       allGraph !== bottomRightGraphType
   );
 
-  // const bottomLeftOptions = allGraphs.filter(
-  //   (allGraph) => allGraph !== bottomLeftGraphType
-  // );
-
-  // const bottomRightOptions = allGraphs.filter(
-  //   (allGraph) => allGraph !== bottomRightGraphType
-  // );
-
+  console.log(reportData.length);
   return (
-    <div className="page report">
-      <Navbar />
-      <Sidebar />
-      <div
-        className="px-5"
-        style={{ marginLeft: '220px', paddingTop: '130px' }}
-      >
-        <h5 className="text-white fw-bold">
-          Comparative Time Series Data Trending
-        </h5>
-        <br />
-        <div className="row">
-          <div className="col mt-4">
-            <div
-              className="p-2"
-              style={{
-                backgroundColor: 'rgba(40, 40, 40, 0.4)',
-                borderRadius: '',
-              }}
-            >
-              <canvas ref={chartRef1}></canvas>
+    <>
+      <div className="page report">
+        <Navbar />
+        <Sidebar />
+        <div
+          className="px-5"
+          style={{ marginLeft: '180px', paddingTop: '100px' }}
+        >
+          <div className="row">
+            <div className="col">
+              <h5 className="text-white fw-bold">
+                Comparative Time Series Data Trending
+              </h5>
+            </div>
+            <div className="col text-end">
+              <h5 className="text-white fw-bold">{latestDate && latestDate}</h5>
             </div>
           </div>
-          <div className="col">
-            <div className="form-group">
-              <select
-                value={topRightGraphType}
-                onChange={handleTopRightGraphType}
-                className="text-right"
+
+          <br />
+          <div className="row">
+            <div className="col mt-4">
+              <div
+                className="p-2"
+                style={{
+                  backgroundColor: 'rgba(40, 40, 40, 0.4)',
+                  borderRadius: '',
+                }}
               >
-                <option value="">{topRightGraphType}</option>
-                {topRightOptions.map((option, index) => (
-                  <option key={index} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
+                <canvas ref={chartRef1}></canvas>
+              </div>
             </div>
-            <div
-              className="p-2"
-              style={{ backgroundColor: 'rgba(40, 40, 40, 0.4)' }}
-            >
-              <canvas ref={chartRef2}></canvas>
+            <div className="col">
+              <div className="form-group" style={{ textAlign: 'right' }}>
+                <select
+                  value={topRightGraphType}
+                  onChange={handleTopRightGraphType}
+                  style={{ backgroundColor: 'grey' }}
+                >
+                  <option value="">{topRightGraphType}</option>
+                  {topRightOptions.map((option, index) => (
+                    <option key={index} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div
+                className="p-2"
+                style={{ backgroundColor: 'rgba(40, 40, 40, 0.4)' }}
+              >
+                <canvas ref={chartRef2}></canvas>
+              </div>
             </div>
           </div>
-        </div>
-        <br />
-        <div className="row">
-          <div className="col">
-            <div className="form-group">
-              <select
-                value={bottomLeftGraphType}
-                onChange={handleBottomLeftGraphType}
-                className="text-right"
+          <br />
+          <div className="row">
+            <div className="col">
+              <div className="form-group" style={{ textAlign: 'right' }}>
+                <select
+                  value={bottomLeftGraphType}
+                  onChange={handleBottomLeftGraphType}
+                  className="text-right"
+                  style={{ backgroundColor: 'grey' }}
+                >
+                  <option value="">{bottomLeftGraphType}</option>
+                  {topRightOptions.map((option, index) => (
+                    <option key={index} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div
+                className="p-2"
+                style={{ backgroundColor: 'rgba(40, 40, 40, 0.4)' }}
               >
-                <option value="">{bottomLeftGraphType}</option>
-                {topRightOptions.map((option, index) => (
-                  <option key={index} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
+                <canvas ref={chartRef3}></canvas>
+              </div>
             </div>
-            <div
-              className="p-2"
-              style={{ backgroundColor: 'rgba(40, 40, 40, 0.4)' }}
-            >
-              <canvas ref={chartRef3}></canvas>
-            </div>
-          </div>
-          <div className="col">
-            <div className="form-group">
-              <select
-                value={bottomRightGraphType}
-                onChange={handleBottomRightGraphType}
-                className="text-right"
+            <div className="col">
+              <div className="form-group" style={{ textAlign: 'right' }}>
+                <select
+                  value={bottomRightGraphType}
+                  onChange={handleBottomRightGraphType}
+                  style={{ backgroundColor: 'grey' }}
+                >
+                  <option value="">{bottomRightGraphType}</option>
+                  {topRightOptions.map((option, index) => (
+                    <option key={index} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div
+                className="p-2"
+                style={{ backgroundColor: 'rgba(40, 40, 40, 0.4)' }}
               >
-                <option value="">{bottomRightGraphType}</option>
-                {topRightOptions.map((option, index) => (
-                  <option key={index} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div
-              className="p-2"
-              style={{ backgroundColor: 'rgba(40, 40, 40, 0.4)' }}
-            >
-              <canvas ref={chartRef4}></canvas>
+                <canvas ref={chartRef4}></canvas>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

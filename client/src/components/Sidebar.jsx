@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 const Sidebar = () => {
   return (
     <div className="sidebar">
-      <h5 className="text-white p-3 fw-bold text-center"> Lotus Wireless</h5>
+      <h5 className="text-white p-3 fw-bold text-center"> </h5>
       <a className="" href="#home">
         <i className="fa fa-tachometer"> </i> Cockpit
       </a>
@@ -19,12 +19,12 @@ const Sidebar = () => {
         >
           <i className="fa fa-bar-chart"> </i> Analytics
         </Link>
-        <div className="dropdown-menu bg-dark">
-          <Link className="dropdown-item" to="/report">
-            Analytics
+        <div className="dropdown-menu bg-dark mx-2">
+          <Link className="dropdown-item" to="/line">
+            Time Series
           </Link>
           <Link className="dropdown-item" to="/bar">
-            Validation
+            Freq. Distribution
           </Link>
         </div>
       </div>

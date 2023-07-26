@@ -6,22 +6,19 @@ const Navbar = () => {
     <div>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div className="container-fluid">
-          <Link className="navbar-brand" to="/report">
+          <Link className="navbar-brand" to="/line">
             <img
               src="lotus.png"
               alt=""
-              style={{ width: '60px' }}
+              style={{ width: '50px' }}
               className="mx-5"
-            />
-            <img
-              src="/siCalc.png"
-              alt=""
-              style={{ width: '120px' }}
-              className="mx-5"
-            />
+            />{' '}
+            <br />
+            <img src="logo.png" alt="" width={120} className="mx-2" />{' '}
           </Link>
+
           <button
-            className="navbar-toggler"
+            className="navbar-toggler "
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarColor03"
@@ -31,8 +28,9 @@ const Navbar = () => {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
-          <div className="collapse navbar-collapse" id="navbarColor03">
+          <div className="collapse navbar-collapse mx-5" id="navbarColor03">
             <ul className="navbar-nav me-auto">
+              <h1 className="   fw-bold">SilCal</h1>
               <li className="nav-item">
                 <Link className="nav-link active" to="/report">
                   Home
@@ -61,7 +59,7 @@ const Navbar = () => {
                 type="search"
                 placeholder="Search"
               />
-              <button className="btn btn-secondary my-2 my-sm-0" type="submit">
+              <button className="btn btn-secondary " type="submit">
                 Search
               </button>
             </form>
